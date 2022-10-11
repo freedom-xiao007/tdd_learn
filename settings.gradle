@@ -1,2 +1,3 @@
 rootProject.name = 'tdd_learn'
+include 'command_parse'
 
