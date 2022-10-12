@@ -12,8 +12,8 @@ public class ArgsTest {
     // todo:任务分解
     // single:
     //     [x]- bool -l
-    //     - int -p 8080
-    //     - string -d /usr/logs
+    //     [x]- int -p 8080
+    //     [x]- string -d /usr/logs
     // multi:
     //     -l -p 8080 -d /usr/logs
     // sad path:
@@ -49,8 +49,8 @@ public class ArgsTest {
         assertEquals("/usr/logs", option.directory());
     }
 
-    @Disabled
-    public void test() {
+    @Test
+    public void test_parse_multi() {
         Options options = Args.parse(Options.class, "-l -p 8080 -d /usr/logs");
         assertTrue(options.logging());
         assertEquals(8080, options.port());

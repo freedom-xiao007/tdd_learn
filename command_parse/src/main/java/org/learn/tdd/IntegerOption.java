@@ -1,4 +1,4 @@
 package org.learn.tdd;
 
-public record IntegerOption(@Option("d")int port) {
+public record IntegerOption(@Option("p")int port) {
 }
