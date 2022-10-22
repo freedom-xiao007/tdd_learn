@@ -1,9 +1,12 @@
 package org.learn.tdd;
 
+import org.learn.tdd.option.*;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class Args {
 
@@ -23,20 +26,18 @@ public class Args {
     }
 
     private static Object parseOption(Parameter parameter, List<String> argsList) {
-        Object value = null;
         Option option = parameter.getAnnotation(Option.class);
-
-        if (parameter.getType() == boolean.class) {
-            value = argsList.contains("-" + option.value());
-        }
-        else if (parameter.getType() == int.class) {
-            int index = argsList.indexOf("-" + option.value());
-            value = Integer.parseInt(argsList.get(index + 1));
-        }
-        else if (parameter.getType() == String.class) {
-            int index = argsList.indexOf("-" + option.value());
-            value = argsList.get(index + 1);
-        }
-        return value;
+        return parseValue(option, parameter, argsList);
     }
+
+    private static final Map<Class<?>, OptionParser> PARSERS = Map.of(
+            boolean.class, new OptionBoolParser(),
+            int.class, new OptionIntParser(),
+            String.class, new OptionStringParser()
+    );
+
+    private static Object parseValue(Option option, Parameter parameter, List<String> argsList) {
+        return PARSERS.get(parameter.getType()).parse(argsList, option);
+    }
+
 }
