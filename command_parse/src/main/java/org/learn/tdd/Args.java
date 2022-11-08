@@ -20,6 +20,9 @@ public class Args {
             List<String> argsList = Arrays.stream(args.split(" ")).toList();
             Object[] values = Arrays.stream(constructor.getParameters()).map(it -> parseOption(it, argsList)).toArray();
             return (T) constructor.newInstance(values);
+        }
+        catch (MoreArgumentsException | ArgumentsTypeErrorException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -32,8 +35,8 @@ public class Args {
 
     private static final Map<Class<?>, OptionParser> PARSERS = Map.of(
             boolean.class, new OptionBoolParser(),
-            int.class, new SingleValueOptionParser(Integer::parseInt),
-            String.class, new SingleValueOptionParser(String::valueOf)
+            int.class, new SingleValueOptionParser(0, Integer::parseInt),
+            String.class, new SingleValueOptionParser("/home/logs", String::valueOf)
     );
 
     private static Object parseValue(Option option, Parameter parameter, List<String> argsList) {
