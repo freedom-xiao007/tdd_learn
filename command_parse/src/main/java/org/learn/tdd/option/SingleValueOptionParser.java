@@ -2,11 +2,12 @@ package org.learn.tdd.option;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 public class SingleValueOptionParser implements OptionParser {
 
     protected Function<String, Object> parseFunc;
-    private Object defaultValue;
+    private final Object defaultValue;
 
     public SingleValueOptionParser(Object defaultValue, Function<String, Object> function) {
         this.defaultValue = defaultValue;
@@ -19,15 +20,25 @@ public class SingleValueOptionParser implements OptionParser {
         if (index < 0) {
             return defaultValue;
         }
-        if (index + 2 < argsList.size() && !argsList.get(index + 2).startsWith("-")) {
-            throw new MoreArgumentsException(option.value());
-        }
-        String value = argsList.get(index + 1);
+        List<String> values = values(argsList, option, index);
+        String value = values.get(0);
         try {
             return parseValue(value);
         } catch (Exception e) {
             throw new ArgumentsTypeErrorException(option.value(), e.getMessage());
         }
+    }
+
+    private List<String> values(List<String> argsList, Option option, int index) {
+        int flowingFlag = IntStream.range(index +1, argsList.size())
+                .filter(it -> argsList.get(it).startsWith("-"))
+                .findFirst()
+                .orElse(argsList.size());
+        List<String> values = argsList.subList(index +1, flowingFlag);
+        if (values.size() > 1) {
+            throw new MoreArgumentsException(option.value());
+        }
+        return values;
     }
 
     protected Object parseValue(String value) {

@@ -113,7 +113,7 @@ public class ArgsTest {
     }
 
     @Test
-    public void test_parse_more_empty_loggging_false() {
+    public void test_parse_more_empty_logging_false() {
         Options option = Args.parse(Options.class, "-p 80 -d /usr");
         assertFalse(option.logging());
     }

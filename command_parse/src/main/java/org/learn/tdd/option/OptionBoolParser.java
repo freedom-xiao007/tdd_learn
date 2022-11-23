@@ -10,9 +10,13 @@ public class OptionBoolParser implements OptionParser {
         if (index < 0) {
             return false;
         }
-        if(index + 1 < argsList.size() && !argsList.get(index + 1).startsWith("-")) {
+        if(nextStartWithOption(argsList, index)) {
             throw new MoreArgumentsException(option.value());
         }
         return true;
+    }
+
+    private boolean nextStartWithOption(List<String> argsList, int index) {
+        return index + 1 < argsList.size() && !argsList.get(index + 1).startsWith("-");
     }
 }
