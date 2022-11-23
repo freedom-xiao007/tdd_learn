@@ -34,9 +34,9 @@ public class Args {
     }
 
     private static final Map<Class<?>, OptionParser> PARSERS = Map.of(
-            boolean.class, new OptionBoolParser(),
-            int.class, new SingleValueOptionParser(0, Integer::parseInt),
-            String.class, new SingleValueOptionParser("/home/logs", String::valueOf)
+            boolean.class, SingleValueOptionParser.bool(),
+            int.class, SingleValueOptionParser.unary(0, Integer::parseInt),
+            String.class, SingleValueOptionParser.unary("/home/logs", String::valueOf)
     );
 
     private static Object parseValue(Option option, Parameter parameter, List<String> argsList) {
